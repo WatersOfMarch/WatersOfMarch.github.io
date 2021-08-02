@@ -3,10 +3,7 @@
   <entry>
     <title>springboot查询</title>
     <url>/2021/08/01/springboot%E6%9F%A5%E8%AF%A2-0/</url>
-    <content><![CDATA[<p>使用springboot + mybatis 实现查询功能 （根据条件查询，接口字符串拼接）</p>
-<span id="more"></span>
-
-<h1 id="SpringBoot-MyBatis-查询语句-（根据条件查询）"><a href="#SpringBoot-MyBatis-查询语句-（根据条件查询）" class="headerlink" title="SpringBoot + MyBatis 查询语句  （根据条件查询）"></a>SpringBoot + MyBatis 查询语句  （根据条件查询）</h1><h3 id="1-新建数据库和表内容"><a href="#1-新建数据库和表内容" class="headerlink" title="1.新建数据库和表内容"></a>1.新建数据库和表内容</h3><p><img src="/2021/08/01/springboot%E6%9F%A5%E8%AF%A2-0/image-20210722152711177.png"></p>
+    <content><![CDATA[<h1 id="SpringBoot-MyBatis-查询语句-（根据条件查询）"><a href="#SpringBoot-MyBatis-查询语句-（根据条件查询）" class="headerlink" title="SpringBoot + MyBatis 查询语句  （根据条件查询）"></a>SpringBoot + MyBatis 查询语句  （根据条件查询）</h1><h3 id="1-新建数据库和表内容"><a href="#1-新建数据库和表内容" class="headerlink" title="1.新建数据库和表内容"></a>1.新建数据库和表内容</h3><p><img src="/2021/08/01/springboot%E6%9F%A5%E8%AF%A2-0/image-20210722152711177.png"></p>
 <p>全部根据 tt 中的数据进行查询</p>
 <h3 id="2-创建工程目录结构（springboot创建好后）"><a href="#2-创建工程目录结构（springboot创建好后）" class="headerlink" title="2.创建工程目录结构（springboot创建好后）"></a>2.创建工程目录结构（springboot创建好后）</h3><p><img src="/2021/08/01/springboot%E6%9F%A5%E8%AF%A2-0/image-20210722152928143.png"></p>
 <ul>
@@ -71,7 +68,6 @@
 <h2 id="7-PostMan测试接口"><a href="#7-PostMan测试接口" class="headerlink" title="7.PostMan测试接口"></a>7.PostMan测试接口</h2><p><img src="/2021/08/01/springboot%E6%9F%A5%E8%AF%A2-0/image-20210722160646581.png"></p>
 <p>其他的雷同，在 /get/  输入对应的 tt 值就可调用</p>
 <p><strong>最终的目录</strong></p>
-<p><img src="/2021/08/01/springboot%E6%9F%A5%E8%AF%A2-0/image-20210722160822033.png"></p>
-]]></content>
+<p><img src="/2021/08/01/springboot%E6%9F%A5%E8%AF%A2-0/image-20210722160822033.png"></p>]]></content>
   </entry>
 </search>
