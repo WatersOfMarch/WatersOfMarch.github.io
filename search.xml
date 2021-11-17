@@ -125,6 +125,69 @@
 </ul>]]></content>
   </entry>
   <entry>
+    <title>Nginx部署Vue项目</title>
+    <url>/2021/09/08/Nginx%E9%83%A8%E7%BD%B2Vue%E9%A1%B9%E7%9B%AE/</url>
+    <content><![CDATA[<h1 id="Nginx部署Vue项目"><a href="#Nginx部署Vue项目" class="headerlink" title="Nginx部署Vue项目"></a>Nginx部署Vue项目</h1><h2 id="一、准备工作"><a href="#一、准备工作" class="headerlink" title="一、准备工作"></a>一、准备工作</h2><ol>
+<li>下载 Xshell 连接阿里云服务器</li>
+<li>下载 Xftp 便于管理文件和上传文件</li>
+<li>打包好 vue 项目，出现一个dist文件夹，注意里头使用绝对路径</li>
+</ol>
+<h2 id="二、安装Docker"><a href="#二、安装Docker" class="headerlink" title="二、安装Docker"></a>二、安装Docker</h2><p>我的阿里云服务器装的 CentOS 系统，使用命令安装：</p>
+<p>官方：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun</span><br></pre></td></tr></table></figure>
+
+<p>国内：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">curl -sSL https://get.daocloud.io/docker | sh</span><br></pre></td></tr></table></figure>
+
+<p>启动 Docker：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo systemctl start docker</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="三、通过-Docker-安装-Nginx"><a href="#三、通过-Docker-安装-Nginx" class="headerlink" title="三、通过 Docker 安装 Nginx"></a>三、通过 Docker 安装 Nginx</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker images             ------------列出本地镜像</span><br></pre></td></tr></table></figure>
+
+<p>先查看下本地镜像，没有结果，因为还没有镜像，但也说明了我们 Docker 已经安装成功</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker search nginx       ------------找到nginx相关镜像服务，后头是介绍</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/09/08/Nginx%E9%83%A8%E7%BD%B2Vue%E9%A1%B9%E7%9B%AE/image-20210908102511105.png" alt="image-20210908102511105"></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker pull nginx       ------------安装nginx</span><br><span class="line">docker images           ------------安装后再次查看</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/09/08/Nginx%E9%83%A8%E7%BD%B2Vue%E9%A1%B9%E7%9B%AE/image-20210908102817179.png" alt="image-20210908102817179"></p>
+<p>启动该镜像，使用nginx服务，代理本机8080端口（服务器安全组需要开放8080端口）</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker run -d -p 8080:80 --name nginx-8080 nginx</span><br><span class="line"></span><br><span class="line">-d: 后台运行</span><br><span class="line">8080: 服务器端口</span><br><span class="line">80： nginx端口</span><br><span class="line">nginx-8080: 取容器名为此</span><br><span class="line">nginx: 镜像名</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker ps               ------------查看安装的容器，安装后会有一个id号</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/09/08/Nginx%E9%83%A8%E7%BD%B2Vue%E9%A1%B9%E7%9B%AE/image-20210908103920679.png" alt="image-20210908103920679"></p>
+<p><strong>Docker 命令：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker images                ------------列出本地镜像</span><br><span class="line">docker ps                    ------------列出容器(跑着的)</span><br><span class="line">docker ps -a                 ------------列出容器(跑+没跑)</span><br><span class="line">docker stop nginx-8080       ------------停止名为nginx-8080的服务</span><br><span class="line">docker restart nginx-8080    ------------重启</span><br></pre></td></tr></table></figure>
+
+
+
+<p>在浏览器访问服务器 ip：8080  出现该图说明成功</p>
+<img src="/2021/09/08/Nginx%E9%83%A8%E7%BD%B2Vue%E9%A1%B9%E7%9B%AE/image-20210908114359253.png" alt="image-20210908114359253" style="zoom: 80%;">
+
+
+
+<h2 id="四、将vue项目上传到服务器上"><a href="#四、将vue项目上传到服务器上" class="headerlink" title="四、将vue项目上传到服务器上"></a>四、将vue项目上传到服务器上</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">/usr/local/nginx/sbin             ------------里头的nginx用于启动</span><br><span class="line">/usr/local/nginx/conf/nginx.conf  ------------配置文件</span><br><span class="line">ps -ef | grep nginx               ------------查看安装目录</span><br></pre></td></tr></table></figure>
+
+<p>用 Xftp 把 dist 文件夹上传到服务器，<strong>注意不要放在/root下，nginx访问不到root</strong></p>
+<p><img src="/2021/09/08/Nginx%E9%83%A8%E7%BD%B2Vue%E9%A1%B9%E7%9B%AE/image-20210908115305556.png" alt="image-20210908115305556"></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">vim /usr/local/nginx/conf/nginx.conf</span><br><span class="line">进入配置文件，按 i 进入编辑模式，按 Esc 退出编辑</span><br><span class="line">:q    退出</span><br><span class="line">：wq  保存操作退出</span><br></pre></td></tr></table></figure>
+
+<img src="/2021/09/08/Nginx%E9%83%A8%E7%BD%B2Vue%E9%A1%B9%E7%9B%AE/image-20210908115916541.png" alt="image-20210908115916541" style="zoom:80%;">
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">重启服务：(每次修改完都要保存重启)：</span><br><span class="line"></span><br><span class="line">让服务定位到配置文件：</span><br><span class="line">/usr/local/nginx/sbin/nginx -t -c /usr/local/nginx/conf/nginx.conf</span><br><span class="line"></span><br><span class="line">重启：</span><br><span class="line">cd /usr/local/nginx/sbin/</span><br><span class="line">./nginx -s reload</span><br></pre></td></tr></table></figure>
+
+<p>打开浏览器访问公网地址，就能看到界面啦！！！</p>
+<p><img src="/2021/09/08/Nginx%E9%83%A8%E7%BD%B2Vue%E9%A1%B9%E7%9B%AE/image-20210908120431261.png" alt="image-20210908120431261"></p>
+<h2 id="五、错误总结"><a href="#五、错误总结" class="headerlink" title="五、错误总结"></a>五、错误总结</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">404     ------------找不到文件，配置文件中 try_files未指定文件</span><br><span class="line">500     ------------路径对了，服务无法访问，因为文件放在/root里了</span><br><span class="line">访问后页面白屏  ------程序里没有是绝对路径</span><br><span class="line">有的页面部分图片加载不出   -------应该是我的服务器配置不够</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">参考文档：</span><br><span class="line">部署：</span><br><span class="line">https://blog.csdn.net/longqizhanshen/article/details/106963318</span><br><span class="line">https://www.jianshu.com/p/05f889faa74b</span><br><span class="line">报错：</span><br><span class="line">https://blog.csdn.net/weixin_43465090/article/details/89027047</span><br><span class="line">https://blog.csdn.net/qq_43059674/article/details/110296807</span><br><span class="line">https://blog.csdn.net/Xu_JL1997/article/details/105751623</span><br></pre></td></tr></table></figure>
+
+<p>我们的项目是前后端分离，这样的话，就把8080端口占用掉了，需要把后端换个端口</p>]]></content>
+  </entry>
+  <entry>
     <title>springboot查询</title>
     <url>/2021/08/01/springboot%E6%9F%A5%E8%AF%A2-0/</url>
     <content><![CDATA[<h1 id="SpringBoot-MyBatis-查询语句-（根据条件查询）"><a href="#SpringBoot-MyBatis-查询语句-（根据条件查询）" class="headerlink" title="SpringBoot + MyBatis 查询语句  （根据条件查询）"></a>SpringBoot + MyBatis 查询语句  （根据条件查询）</h1><h3 id="1-新建数据库和表内容"><a href="#1-新建数据库和表内容" class="headerlink" title="1.新建数据库和表内容"></a>1.新建数据库和表内容</h3><p><img src="/2021/08/01/springboot%E6%9F%A5%E8%AF%A2-0/image-20210722152711177.png"></p>
@@ -194,69 +257,6 @@
 <p><strong>最终的目录</strong></p>
 <p><img src="/2021/08/01/springboot%E6%9F%A5%E8%AF%A2-0/image-20210722160822033.png"></p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">**    The author disclaims copyright to this source code.</span></span><br><span class="line"><span class="comment">**    In place of a legal notice, here is a blessing:</span></span><br><span class="line"><span class="comment">**</span></span><br><span class="line"><span class="comment">**    May you do good and not evil.</span></span><br><span class="line"><span class="comment">**    May you find forgiveness for yourself and forgive others.</span></span><br><span class="line"><span class="comment">**    May you share freely, never taking more than you give.</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>]]></content>
-  </entry>
-  <entry>
-    <title>Nginx部署Vue项目</title>
-    <url>/2021/09/08/Nginx%E9%83%A8%E7%BD%B2Vue%E9%A1%B9%E7%9B%AE/</url>
-    <content><![CDATA[<h1 id="Nginx部署Vue项目"><a href="#Nginx部署Vue项目" class="headerlink" title="Nginx部署Vue项目"></a>Nginx部署Vue项目</h1><h2 id="一、准备工作"><a href="#一、准备工作" class="headerlink" title="一、准备工作"></a>一、准备工作</h2><ol>
-<li>下载 Xshell 连接阿里云服务器</li>
-<li>下载 Xftp 便于管理文件和上传文件</li>
-<li>打包好 vue 项目，出现一个dist文件夹，注意里头使用绝对路径</li>
-</ol>
-<h2 id="二、安装Docker"><a href="#二、安装Docker" class="headerlink" title="二、安装Docker"></a>二、安装Docker</h2><p>我的阿里云服务器装的 CentOS 系统，使用命令安装：</p>
-<p>官方：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun</span><br></pre></td></tr></table></figure>
-
-<p>国内：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">curl -sSL https://get.daocloud.io/docker | sh</span><br></pre></td></tr></table></figure>
-
-<p>启动 Docker：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo systemctl start docker</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="三、通过-Docker-安装-Nginx"><a href="#三、通过-Docker-安装-Nginx" class="headerlink" title="三、通过 Docker 安装 Nginx"></a>三、通过 Docker 安装 Nginx</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker images             ------------列出本地镜像</span><br></pre></td></tr></table></figure>
-
-<p>先查看下本地镜像，没有结果，因为还没有镜像，但也说明了我们 Docker 已经安装成功</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker search nginx       ------------找到nginx相关镜像服务，后头是介绍</span><br></pre></td></tr></table></figure>
-
-<p><img src="/2021/09/08/Nginx%E9%83%A8%E7%BD%B2Vue%E9%A1%B9%E7%9B%AE/image-20210908102511105.png" alt="image-20210908102511105"></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker pull nginx       ------------安装nginx</span><br><span class="line">docker images           ------------安装后再次查看</span><br></pre></td></tr></table></figure>
-
-<p><img src="/2021/09/08/Nginx%E9%83%A8%E7%BD%B2Vue%E9%A1%B9%E7%9B%AE/image-20210908102817179.png" alt="image-20210908102817179"></p>
-<p>启动该镜像，使用nginx服务，代理本机8080端口（服务器安全组需要开放8080端口）</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker run -d -p 8080:80 --name nginx-8080 nginx</span><br><span class="line"></span><br><span class="line">-d: 后台运行</span><br><span class="line">8080: 服务器端口</span><br><span class="line">80： nginx端口</span><br><span class="line">nginx-8080: 取容器名为此</span><br><span class="line">nginx: 镜像名</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker ps               ------------查看安装的容器，安装后会有一个id号</span><br></pre></td></tr></table></figure>
-
-<p><img src="/2021/09/08/Nginx%E9%83%A8%E7%BD%B2Vue%E9%A1%B9%E7%9B%AE/image-20210908103920679.png" alt="image-20210908103920679"></p>
-<p><strong>Docker 命令：</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker images                ------------列出本地镜像</span><br><span class="line">docker ps                    ------------列出容器(跑着的)</span><br><span class="line">docker ps -a                 ------------列出容器(跑+没跑)</span><br><span class="line">docker stop nginx-8080       ------------停止名为nginx-8080的服务</span><br><span class="line">docker restart nginx-8080    ------------重启</span><br></pre></td></tr></table></figure>
-
-
-
-<p>在浏览器访问服务器 ip：8080  出现该图说明成功</p>
-<img src="/2021/09/08/Nginx%E9%83%A8%E7%BD%B2Vue%E9%A1%B9%E7%9B%AE/image-20210908114359253.png" alt="image-20210908114359253" style="zoom: 80%;">
-
-
-
-<h2 id="四、将vue项目上传到服务器上"><a href="#四、将vue项目上传到服务器上" class="headerlink" title="四、将vue项目上传到服务器上"></a>四、将vue项目上传到服务器上</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">/usr/local/nginx/sbin             ------------里头的nginx用于启动</span><br><span class="line">/usr/local/nginx/conf/nginx.conf  ------------配置文件</span><br><span class="line">ps -ef | grep nginx               ------------查看安装目录</span><br></pre></td></tr></table></figure>
-
-<p>用 Xftp 把 dist 文件夹上传到服务器，<strong>注意不要放在/root下，nginx访问不到root</strong></p>
-<p><img src="/2021/09/08/Nginx%E9%83%A8%E7%BD%B2Vue%E9%A1%B9%E7%9B%AE/image-20210908115305556.png" alt="image-20210908115305556"></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">vim /usr/local/nginx/conf/nginx.conf</span><br><span class="line">进入配置文件，按 i 进入编辑模式，按 Esc 退出编辑</span><br><span class="line">:q    退出</span><br><span class="line">：wq  保存操作退出</span><br></pre></td></tr></table></figure>
-
-<img src="/2021/09/08/Nginx%E9%83%A8%E7%BD%B2Vue%E9%A1%B9%E7%9B%AE/image-20210908115916541.png" alt="image-20210908115916541" style="zoom:80%;">
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">重启服务：(每次修改完都要保存重启)：</span><br><span class="line"></span><br><span class="line">让服务定位到配置文件：</span><br><span class="line">/usr/local/nginx/sbin/nginx -t -c /usr/local/nginx/conf/nginx.conf</span><br><span class="line"></span><br><span class="line">重启：</span><br><span class="line">cd /usr/local/nginx/sbin/</span><br><span class="line">./nginx -s reload</span><br></pre></td></tr></table></figure>
-
-<p>打开浏览器访问公网地址，就能看到界面啦！！！</p>
-<p><img src="/2021/09/08/Nginx%E9%83%A8%E7%BD%B2Vue%E9%A1%B9%E7%9B%AE/image-20210908120431261.png" alt="image-20210908120431261"></p>
-<h2 id="五、错误总结"><a href="#五、错误总结" class="headerlink" title="五、错误总结"></a>五、错误总结</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">404     ------------找不到文件，配置文件中 try_files未指定文件</span><br><span class="line">500     ------------路径对了，服务无法访问，因为文件放在/root里了</span><br><span class="line">访问后页面白屏  ------程序里没有是绝对路径</span><br><span class="line">有的页面部分图片加载不出   -------应该是我的服务器配置不够</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">参考文档：</span><br><span class="line">部署：</span><br><span class="line">https://blog.csdn.net/longqizhanshen/article/details/106963318</span><br><span class="line">https://www.jianshu.com/p/05f889faa74b</span><br><span class="line">报错：</span><br><span class="line">https://blog.csdn.net/weixin_43465090/article/details/89027047</span><br><span class="line">https://blog.csdn.net/qq_43059674/article/details/110296807</span><br><span class="line">https://blog.csdn.net/Xu_JL1997/article/details/105751623</span><br></pre></td></tr></table></figure>
-
-<p>我们的项目是前后端分离，这样的话，就把8080端口占用掉了，需要把后端换个端口</p>]]></content>
   </entry>
   <entry>
     <title>初探返回类</title>
@@ -755,8 +755,8 @@
 <p>web容器在启动的时候，它会为每个web程序都创建一个对应的ServletContext对象，它代表了当前的web应用；（起到中间商的作用）</p>
 <ul>
 <li><p>数据共享 </p>
-</li>
-<li><p>我在这个Servlet中保存的数据，可以在另外一个Servlet中拿到；</p>
+<p>我在这个Servlet中保存的数据，可以在另外一个Servlet中拿到；</p>
+<p><img src="/2021/11/17/Javaweb/image-20211117204055479.png" alt="image-20211117204157255"></p>
 <p>1.文件结构</p>
 </li>
 </ul>
