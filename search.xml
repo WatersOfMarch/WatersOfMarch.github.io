@@ -10,7 +10,7 @@
 <li>倒数第k个问题</li>
 </ol>
 <p>设有两个指针 p 和 q，初始时都指向头节点。首先，先让 q 沿着 next 移动 k 次；此时，p 指向头节点，q 指向 k+1 个节点，两个指针的距离为 k。然后，同时移动 p 和 q，直到 q 指向空，此时，p 指向倒数第 k 个节点</p>
-<p><img src="https://pic.leetcode-cn.com/8fc9ef022554d2a062db6a70d5199dbbb2a154ba1e64f0f697319bb0ef9ac680.png" alt="移动过程中保持距离为 k "></p>
+<p><img src="/2021/11/26/List%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/1.png" alt="移动过程中保持距离为 k "></p>
 <ol start="2">
 <li><p>获取中间元素问题</p>
 <ol>
@@ -22,12 +22,12 @@
 </ol>
 </li>
 </ol>
-<p><img src="https://pic.leetcode-cn.com/7984572cea859a3d569932934fe6580abf3f59221ec95911f662f1f19b6822aa.png" alt="快慢指针"></p>
+<p><img src="/2021/11/26/List%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/2.png" alt="快慢指针"></p>
 <ol start="3">
 <li><p>是否存在环的问题。如果尾节点的指针指向其他任意一个节点，就代表有环的存在</p>
-<p><img src="https://pic.leetcode-cn.com/ea4aff71116d6c483b2b34519497d39d640435cb3ce12ea1b40dd453c45b59fd.png" alt="一个有环的链表"></p>
+<p><img src="/2021/11/26/List%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/3.png" alt="一个有环的链表"></p>
 <p>当链表有环，快慢指针会陷入无限次移动，然后变成追击问题；快指针一次移动两步，慢指针一次移动一步；只要一直移动下去，快指针总会追上慢指针；<font color="yellow">快慢指针相遇</font>，代表有环的存在</p>
-<p><img src="https://pic.leetcode-cn.com/d1ac82780e5189d7d58406504c3b7b56c35165997bfbb4c325677af92ee2d483.gif" alt="快慢指针在环上追及"></p>
+<p><img src="/2021/11/26/List%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/4.gif" alt="快慢指针在环上追及"></p>
 </li>
 <li><p>最后，如果存在环，如何判断环的长度？快慢指针继续移动，<font color="yellow">直到相遇第二次。</font>两次相遇间的移动次数即为环的长度</p>
 </li>
