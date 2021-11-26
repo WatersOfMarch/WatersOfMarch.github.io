@@ -897,7 +897,141 @@ int SC_HTTP_VERSION_NOT_SUPPORTED = 505;
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//RequestTest</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RequestTest</span> <span class="keyword">extends</span> <span class="title">HttpServlet</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doGet</span><span class="params">(HttpServletRequest req, HttpServletResponse resp)</span> <span class="keyword">throws</span> ServletException, IOException </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//处理请求</span></span><br><span class="line">        String username = req.getParameter(<span class="string">&quot;username&quot;</span>);</span><br><span class="line">        String password = req.getParameter(<span class="string">&quot;password&quot;</span>);</span><br><span class="line">        System.out.println(username+<span class="string">&quot;+&quot;</span>+password);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//重定向注意路径问题，否则404</span></span><br><span class="line">        resp.sendRedirect(<span class="string">&quot;./success.jsp&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doPost</span><span class="params">(HttpServletRequest req, HttpServletResponse resp)</span> <span class="keyword">throws</span> ServletException, IOException </span>&#123;</span><br><span class="line">        doGet(req, resp);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p><img src="/2021/11/17/Javaweb/image-20211121201311172.png" alt="image-20211121201311172"></p>
-<h3 id="6-9HttpServletRequest"><a href="#6-9HttpServletRequest" class="headerlink" title="6.9HttpServletRequest"></a>6.9HttpServletRequest</h3>]]></content>
+<h3 id="6-9HttpServletRequest"><a href="#6-9HttpServletRequest" class="headerlink" title="6.9HttpServletRequest"></a>6.9HttpServletRequest</h3><p>HttpServletRequest代表客户端的请求，用户通过HTTP协议访问服务器，HTTP请求中的所有信息会被封装到HttpServletRequest，通过这个HttpServletRequest的方法，获得客户端的所有信息</p>
+<p>获取前端传递参数，请求转发</p>
+<p><img src="/2021/11/17/Javaweb/image-20211124152742507.png" alt="image-20211124152742507"></p>
+<p>一个返回string，一个返回数组；多个和单个</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doGet</span><span class="params">(HttpServletRequest req, HttpServletResponse resp)</span> <span class="keyword">throws</span> ServletException, IOException </span>&#123;</span><br><span class="line"></span><br><span class="line">    req.setCharacterEncoding(<span class="string">&quot;utf-8&quot;</span>);</span><br><span class="line">    resp.setCharacterEncoding(<span class="string">&quot;utf-8&quot;</span>);</span><br><span class="line"></span><br><span class="line">    String username = req.getParameter(<span class="string">&quot;username&quot;</span>);</span><br><span class="line">    String password = req.getParameter(<span class="string">&quot;password&quot;</span>);</span><br><span class="line">    String[] hobbies = req.getParameterValues(<span class="string">&quot;hobbies&quot;</span>);</span><br><span class="line">    System.out.println(<span class="string">&quot;=======================&quot;</span>);</span><br><span class="line">    <span class="comment">//后台接受中文乱码问题</span></span><br><span class="line">    System.out.println(username);</span><br><span class="line">    System.out.println(password);</span><br><span class="line">    System.out.println(Arrays.toString(hobbies));</span><br><span class="line">    System.out.println(<span class="string">&quot;=======================&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//通过请求转发</span></span><br><span class="line">    <span class="comment">//这里的/代表当前的web应用</span></span><br><span class="line">    req.getRequestDispatcher(<span class="string">&quot;/success.jsp&quot;</span>).forward(req,resp);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doPost</span><span class="params">(HttpServletRequest req, HttpServletResponse resp)</span> <span class="keyword">throws</span> ServletException, IOException </span>&#123;</span><br><span class="line">    doGet(req, resp);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="7-Cookie、Session"><a href="#7-Cookie、Session" class="headerlink" title="7.Cookie、Session"></a>7.Cookie、Session</h2><h3 id="7-1-会话"><a href="#7-1-会话" class="headerlink" title="7.1 会话"></a>7.1 会话</h3><p><strong>会话：</strong>用户打开一个浏览器，点击了很多超链接，访问多个web资源，关闭浏览器，这个过程叫会话</p>
+<p><strong>有状态会话：</strong>一个同学来过教室，下次再来，我们会知道这个同学，曾经来过</p>
+<p><strong>你怎么正面你是清华的学生？</strong></p>
+<p>对象：  你    清华</p>
+<ol>
+<li>发票             清华给你发票</li>
+<li>学校登记      清华标记你来过了</li>
+</ol>
+<p><strong>一个网站，怎么证明你来过</strong></p>
+<p>客户端         服务端</p>
+<ol>
+<li>服务端给客户端一个信件，客户端下次访问客户端带上信件就可以了；cookie</li>
+<li>服务器登记你来过了，下次你来的时候我匹配你；session</li>
+</ol>
+<h3 id="7-2-保存会话的两种技术"><a href="#7-2-保存会话的两种技术" class="headerlink" title="7.2 保存会话的两种技术"></a>7.2 保存会话的两种技术</h3><p><strong>cookie</strong></p>
+<ul>
+<li>客户端技术（响应，请求）</li>
+</ul>
+<p><strong>session</strong></p>
+<ul>
+<li>服务器技术，利用这个技术，可以保存用户的会话信息，可以把信息或数据放在 session 中</li>
+</ul>
+<p>常见场景：网站登录之后，下次不用登录，直接登上去</p>
+<h3 id="7-3-Cookie"><a href="#7-3-Cookie" class="headerlink" title="7.3 Cookie"></a>7.3 Cookie</h3><ol>
+<li>从请求中拿到cookie信息</li>
+<li>服务器响应给客户端cookie</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Cookie[] cookies = req.getCookies();<span class="comment">//获得Cookie</span></span><br><span class="line">cookie.getName();<span class="comment">//获得Cookie中的key</span></span><br><span class="line">cookie.getValue();<span class="comment">//获得Cookie中的vlaue</span></span><br><span class="line"><span class="keyword">new</span> Cookie(<span class="string">&quot;lastLoginTime&quot;</span>, System.currentTimeMillis()+<span class="string">&quot;&quot;</span>);<span class="comment">//新建一个Cookie</span></span><br><span class="line">cookie.setMaxAge(<span class="number">24</span>*<span class="number">60</span>*<span class="number">60</span>);<span class="comment">//设置Cookie的有效期</span></span><br><span class="line">resp.addCookie(cookie);<span class="comment">//响应给客户端一个cookie</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>cookie：一般会保存在本地的用户目录下 appdata；</strong>（不好，因为不安全）</p>
+<p>一个网站cookie是否存在上限！<strong>细节问题</strong></p>
+<ul>
+<li>一个Cookie只能保存一个信息</li>
+<li>一个web站点可以给浏览器发送多个Cookie，每个站点最多存放20个Cookie</li>
+<li>Cookie大小有限制4kb</li>
+<li>300个Cookie，浏览器上限</li>
+</ul>
+<p>删除Cookie：</p>
+<ul>
+<li>不设置有效期，关闭浏览器，自动失效</li>
+<li>设置有效期为0</li>
+</ul>
+<p><strong>编码解码：</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">URLEncoder.encode(<span class="string">&quot;刘畅&quot;</span>,<span class="string">&quot;utf-8&quot;</span>);<span class="comment">//编码</span></span><br><span class="line">URLDecoder.decode(cookie.getValue(),<span class="string">&quot;utf-8&quot;</span>);<span class="comment">//解码</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="7-4-Session（重点）"><a href="#7-4-Session（重点）" class="headerlink" title="7.4 Session（重点）"></a>7.4 Session（重点）</h3><p>什么是Session：</p>
+<ul>
+<li>服务器会给每一个用户（浏览器）创建一个Session对象</li>
+<li>一个Session独占一个浏览器，只要浏览器没有关闭，这个Session就存在</li>
+<li>用户登录之后，整个网站都可以访问，与网页无关 –&gt;保存用户的信息；保存购物车信息…(长久保存的信息)</li>
+</ul>
+<p>Session和Cookie的区别</p>
+<ul>
+<li>Cookie是把用户的数据写给用户的浏览器，浏览器保存（可以保存多个）</li>
+<li>Session是把用户的数据写到用户独占Session中，服务器保存（保存重要信息，减少服务器资源的浪费；一台浏览器对应一个Session）</li>
+<li>Session对象由服务器创建</li>
+</ul>
+<p>使用场景：</p>
+<ul>
+<li>保存一个登录用户的信息</li>
+<li>购物车信息</li>
+<li>在整个网站中经常会使用的数据，将保存在Session中</li>
+</ul>
+<p>使用Session</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//实体类(Person)</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Person</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Person</span><span class="params">(String name, <span class="keyword">int</span> age)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">        <span class="keyword">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getAge</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAge</span><span class="params">(<span class="keyword">int</span> age)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Person&#123;&quot;</span> +</span><br><span class="line">                <span class="string">&quot;name=&#x27;&quot;</span> + name + <span class="string">&#x27;\&#x27;&#x27;</span> +</span><br><span class="line">                <span class="string">&quot;, age=&quot;</span> + age +</span><br><span class="line">                <span class="string">&#x27;&#125;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//SessionDemo01</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SessionDemo01</span> <span class="keyword">extends</span> <span class="title">HttpServlet</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doGet</span><span class="params">(HttpServletRequest req, HttpServletResponse resp)</span> <span class="keyword">throws</span> ServletException, IOException </span>&#123;</span><br><span class="line">        <span class="comment">//解决乱码问题</span></span><br><span class="line">        req.setCharacterEncoding(<span class="string">&quot;utf-16&quot;</span>);</span><br><span class="line">        resp.setCharacterEncoding(<span class="string">&quot;utf-16&quot;</span>);</span><br><span class="line">        resp.setContentType(<span class="string">&quot;text/html;character=utf-8&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//得到Session</span></span><br><span class="line">        HttpSession session = req.getSession();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//给Session中存东西</span></span><br><span class="line">        session.setAttribute(<span class="string">&quot;name&quot;</span>,<span class="keyword">new</span>  Person(<span class="string">&quot;刘畅&quot;</span>,<span class="number">20</span>));<span class="comment">//记住这个name，Demo02里要用</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//获取Session的ID</span></span><br><span class="line">        String sessionId = session.getId();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//判断Session是不是新创建</span></span><br><span class="line">        <span class="keyword">if</span> (session.isNew())&#123;</span><br><span class="line">            resp.getWriter().write(<span class="string">&quot;session创建成功，ID&quot;</span>+sessionId);</span><br><span class="line">        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">            resp.getWriter().write(<span class="string">&quot;session已经在服务器中存在，ID&quot;</span>+sessionId);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//Session创建的时候做了什么</span></span><br><span class="line">        <span class="comment">//Session创建的时候，会带有一个Cookie的ID</span></span><br><span class="line"><span class="comment">//        Cookie cookie = new Cookie(&quot;JSESSIONID&quot;, sessionId);</span></span><br><span class="line"><span class="comment">//        resp.addCookie(cookie);</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doPost</span><span class="params">(HttpServletRequest req, HttpServletResponse resp)</span> <span class="keyword">throws</span> ServletException, IOException </span>&#123;</span><br><span class="line">        doGet(req, resp);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//SessionDemo02</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SessionDemo02</span> <span class="keyword">extends</span> <span class="title">HttpServlet</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doGet</span><span class="params">(HttpServletRequest req, HttpServletResponse resp)</span> <span class="keyword">throws</span> ServletException, IOException </span>&#123;</span><br><span class="line">        <span class="comment">//解决乱码问题</span></span><br><span class="line">        req.setCharacterEncoding(<span class="string">&quot;utf-16&quot;</span>);</span><br><span class="line">        resp.setCharacterEncoding(<span class="string">&quot;utf-16&quot;</span>);</span><br><span class="line">        resp.setContentType(<span class="string">&quot;text/html;character=utf-8&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//得到Session</span></span><br><span class="line">        HttpSession session = req.getSession();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//共享信息</span></span><br><span class="line">        <span class="comment">//创建新的 Person 对象，从Session中取出,在控制台显示</span></span><br><span class="line">        Person person = (Person) session.getAttribute(<span class="string">&quot;name&quot;</span>);</span><br><span class="line">        System.out.println(person.toString());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doPost</span><span class="params">(HttpServletRequest req, HttpServletResponse resp)</span> <span class="keyword">throws</span> ServletException, IOException </span>&#123;</span><br><span class="line">        doGet(req, resp);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//SessionDemo03</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SessionDemo03</span> <span class="keyword">extends</span> <span class="title">HttpServlet</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doGet</span><span class="params">(HttpServletRequest req, HttpServletResponse resp)</span> <span class="keyword">throws</span> ServletException, IOException </span>&#123;</span><br><span class="line">        HttpSession session = req.getSession();</span><br><span class="line"></span><br><span class="line">        session.removeAttribute(<span class="string">&quot;name&quot;</span>);</span><br><span class="line">        <span class="comment">//手动注销Session</span></span><br><span class="line">        <span class="comment">//注销后重新访问 s2,报错404</span></span><br><span class="line">        session.invalidate();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doPost</span><span class="params">(HttpServletRequest req, HttpServletResponse resp)</span> <span class="keyword">throws</span> ServletException, IOException </span>&#123;</span><br><span class="line">        doGet(req, resp);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>记得要在web.xml中映射地址</strong></p>
+<p>web.xml自动注销</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!--    设置Session默认的失效时间--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">session-config</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--        1min后Session自当失效，以分钟为单位--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">session-timeout</span>&gt;</span>1<span class="tag">&lt;/<span class="name">session-timeout</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">session-config</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="8-JSP（老技术了，看懂就行）"><a href="#8-JSP（老技术了，看懂就行）" class="headerlink" title="8. JSP（老技术了，看懂就行）"></a>8. JSP（老技术了，看懂就行）</h2><h3 id="8-1-什么是JSP"><a href="#8-1-什么是JSP" class="headerlink" title="8.1 什么是JSP"></a>8.1 什么是JSP</h3><p>为了简化Servlet的前端语言</p>
+<p>Java Server Pages: Java服务器页面，也和Servlet一样，用于动态web技术</p>
+<h3 id="8-2-JSP原理"><a href="#8-2-JSP原理" class="headerlink" title="8.2 JSP原理"></a>8.2 JSP原理</h3><p>思路：JSP是怎么执行的</p>
+<ul>
+<li>代码没有问题</li>
+<li>服务器内部工作<ul>
+<li>Tomcat有一个 work 目录</li>
+</ul>
+</li>
+<li><strong>浏览器向服务器发送请求，不管访问什么资源，其实都是在访问Servlet</strong></li>
+<li>JSP最终会被转换为一个Java类</li>
+</ul>
+<p><strong>JSP本质就是Servlet</strong></p>
+<p>我的源码地址：只有编译的时候会产生work文件夹，中的/ROOT，包含index.jsp页面和新建的</p>
+<figure class="highlight tex"><table><tr><td class="code"><pre><span class="line">C:<span class="keyword">\Users</span><span class="keyword">\帝</span>轩王<span class="keyword">\AppData</span><span class="keyword">\Local</span><span class="keyword">\JetBrains</span><span class="keyword">\IntelliJIdea</span>2020.1<span class="keyword">\tomcat</span><span class="keyword">\Unnamed</span><span class="built_in">_</span>javaweb-02-servlet<span class="built_in">_</span>13</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"> <span class="comment">//初始化</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">_jspInit</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  &#125;</span><br><span class="line"><span class="comment">//销毁</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">_jspDestroy</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  &#125;</span><br><span class="line"><span class="comment">//JSPService</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">_jspService</span><span class="params">(HttpServletRequest request,HttpServletResponse response)</span></span></span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><p>判断请求</p>
+</li>
+<li><p>内置一些对象</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">final</span> javax.servlet.jsp.PageContext pageContext; <span class="comment">//页面上下文</span></span><br><span class="line">javax.servlet.http.HttpSession session = <span class="keyword">null</span>;   <span class="comment">//session</span></span><br><span class="line"><span class="keyword">final</span> javax.servlet.ServletContext application;  <span class="comment">//application</span></span><br><span class="line"><span class="keyword">final</span> javax.servlet.ServletConfig config;		<span class="comment">//配置</span></span><br><span class="line">javax.servlet.jsp.JspWriter out = <span class="keyword">null</span>;			<span class="comment">//输出对象</span></span><br><span class="line"><span class="keyword">final</span> java.lang.Object page = <span class="keyword">this</span>;    			<span class="comment">//当前页</span></span><br><span class="line">HttpServletRequest request					   <span class="comment">//请求</span></span><br><span class="line">HttpServletResponse response				   <span class="comment">//响应</span></span><br></pre></td></tr></table></figure></li>
+<li><p>输出页面增加的代码</p>
+</li>
+</ol>
+<p><img src="/2021/11/17/Javaweb/image-20211126122513911.png" alt="image-20211126122513911"></p>
+<h3 id="8-3-JSP基础语法"><a href="#8-3-JSP基础语法" class="headerlink" title="8.3 JSP基础语法"></a>8.3 JSP基础语法</h3><p>耦合性太高（牵一发而动全身）</p>
+<p><font color="yellow">高聚合，低耦合是开发的追求</font></p>
+<p>HSP是Java技术的一些应用，拥有一些扩充给语法（了解）；Java所有语法都支持</p>
+<p>**JSP表达式 **</p>
+<figure class="highlight jsp"><table><tr><td class="code"><pre><span class="line">&lt;%--JSP表达式</span><br><span class="line">作用：用来将程序的输出，输出到客户端</span><br><span class="line">&lt;%=  变量或表达式%&gt;</span><br><span class="line">--%&gt;</span><br><span class="line">&lt;%= <span class="keyword">new</span> java.util.Date()%&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>JSP脚本片段</strong></p>
+<figure class="highlight jsp"><table><tr><td class="code"><pre><span class="line">&lt;%--JSP脚本--%&gt;</span><br><span class="line">&lt;%</span><br><span class="line">    <span class="keyword">int</span> sum = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;=<span class="number">100</span>;i++)</span><br><span class="line">        sum+=i;</span><br><span class="line">    out.println(<span class="string">&quot;&lt;h1&gt;Sum=&quot;</span>+sum+<span class="string">&quot;&lt;/h1&gt;&quot;</span>);</span><br><span class="line">%&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>脚本片段的再实现</strong></p>
+<figure class="highlight jsp"><table><tr><td class="code"><pre><span class="line">&lt;%</span><br><span class="line">    <span class="keyword">int</span> x = <span class="number">10</span>;</span><br><span class="line">    out.println(x);</span><br><span class="line">%&gt;</span><br><span class="line">&lt;p&gt;这是一个JSP文档&lt;/p&gt;</span><br><span class="line">&lt;%</span><br><span class="line">    <span class="keyword">int</span> y = <span class="number">2</span>;</span><br><span class="line">    out.println(y);</span><br><span class="line">%&gt;</span><br><span class="line"></span><br><span class="line">&lt;hr&gt;</span><br><span class="line"></span><br><span class="line">&lt;%--在代码中嵌入HTML元素--%&gt;</span><br><span class="line">&lt;%</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;=<span class="number">3</span>;i++)&#123;</span><br><span class="line">%&gt;</span><br><span class="line">&lt;h1&gt;hello!!&lt;/h1&gt;</span><br><span class="line">&lt;%</span><br><span class="line">    &#125;</span><br><span class="line">%&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>JSP声明</strong></p>
+<figure class="highlight jsp"><table><tr><td class="code"><pre><span class="line">&lt;%!</span><br><span class="line">    </span><br><span class="line">%&gt;</span><br></pre></td></tr></table></figure>
+
+<p>JSP声明:会被编译到JSP生成的Java类中！其他的，就会被生成到_jspService方法中</p>
+<p>在JSP嵌入Java</p>
+<figure class="highlight jsp"><table><tr><td class="code"><pre><span class="line">$&#123;&#125;     取值用的，或在里头编辑</span><br><span class="line">&lt;% %&gt;</span><br><span class="line">&lt;%= %&gt;</span><br><span class="line">&lt;%! %&gt;</span><br><span class="line">&lt;%--注释--%&gt;   jsp的注释不会在客户端显示，HTML的会（查看源代码）</span><br></pre></td></tr></table></figure>
+
+<h3 id="8-4-JSP指令"><a href="#8-4-JSP指令" class="headerlink" title="8.4 JSP指令"></a>8.4 JSP指令</h3><figure class="highlight jsp"><table><tr><td class="code"><pre><span class="line">&lt;%@ page ... %&gt;         定义网页依赖属性，比如脚本语言、error页面、缓存需求等等</span><br><span class="line">&lt;%@ include ... %&gt;      包含其他文件</span><br><span class="line">&lt;%@ taglib ... %&gt;	    引入标签库的定义</span><br></pre></td></tr></table></figure>]]></content>
   </entry>
   <entry>
     <title>Mybatis笔记</title>
