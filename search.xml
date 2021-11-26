@@ -1,6 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>List问题总结</title>
+    <url>/2021/11/26/List%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/</url>
+    <content><![CDATA[<h2 id="相爱相杀好基友——数组与链表"><a href="#相爱相杀好基友——数组与链表" class="headerlink" title="相爱相杀好基友——数组与链表"></a>相爱相杀好基友——数组与链表</h2><p>作为线性表的两种存储方式—-链表和数组，各有优缺点</p>
+<h2 id="面试问题"><a href="#面试问题" class="headerlink" title="面试问题"></a>面试问题</h2><p><strong>无法高效获取长度，无法根据下标快速找到访问元素，是链表的两个劣势；</strong>然而面试中会经常碰到诸如<font color="yellow">如何获取第k个元素</font>、<font color="yellow">获取中间位置元素、</font><font color="yellow">判断链表是否存在环、</font><font color="yellow">判断环的长度</font>这些与长度和位置有关的问题。都可以用双指针来解决</p>
+<p><strong>Tips：双指针并不是固定的公式，而是一种思维方式</strong></p>
+<ol>
+<li>倒数第k个问题</li>
+</ol>
+<p>设有两个指针 p 和 q，初始时都指向头节点。首先，先让 q 沿着 next 移动 k 次；此时，p 指向头节点，q 指向 k+1 个节点，两个指针的距离为 k。然后，同时移动 p 和 q，直到 q 指向空，此时，p 指向倒数第 k 个节点</p>
+<p><img src="https://pic.leetcode-cn.com/8fc9ef022554d2a062db6a70d5199dbbb2a154ba1e64f0f697319bb0ef9ac680.png" alt="移动过程中保持距离为 k "></p>
+<ol start="2">
+<li><p>获取中间元素问题</p>
+<ol>
+<li><p>遍历一遍链表，得知链表长度；即可知道中间元素，再次遍历（u1s1，有点蠢）</p>
+</li>
+<li><p>设有两个指针 a 和 b。每次移动时，a 向前走一次，b 向前走两次，直到 b 无法再走两次；即 b.next.next=null ；</p>
+<p>设链表长度为 n，那么最多移动 n/2 轮。当 n 为<strong>奇数</strong>，a 恰好指向中间节点；当 n 为<strong>偶数</strong>，a 恰好指向中间两个节点靠前的那个</p>
+</li>
+</ol>
+</li>
+</ol>
+<p><img src="https://pic.leetcode-cn.com/7984572cea859a3d569932934fe6580abf3f59221ec95911f662f1f19b6822aa.png" alt="快慢指针"></p>
+<ol start="3">
+<li><p>是否存在环的问题。如果尾节点的指针指向其他任意一个节点，就代表有环的存在</p>
+<p><img src="https://pic.leetcode-cn.com/ea4aff71116d6c483b2b34519497d39d640435cb3ce12ea1b40dd453c45b59fd.png" alt="一个有环的链表"></p>
+<p>当链表有环，快慢指针会陷入无限次移动，然后变成追击问题；快指针一次移动两步，慢指针一次移动一步；只要一直移动下去，快指针总会追上慢指针；<font color="yellow">快慢指针相遇</font>，代表有环的存在</p>
+<p><img src="https://pic.leetcode-cn.com/d1ac82780e5189d7d58406504c3b7b56c35165997bfbb4c325677af92ee2d483.gif" alt="快慢指针在环上追及"></p>
+</li>
+<li><p>最后，如果存在环，如何判断环的长度？快慢指针继续移动，<font color="yellow">直到相遇第二次。</font>两次相遇间的移动次数即为环的长度</p>
+</li>
+</ol>]]></content>
+  </entry>
+  <entry>
     <title>Nginx相关介绍</title>
     <url>/2021/09/12/Nginx%E7%9B%B8%E5%85%B3%E4%BB%8B%E7%BB%8D/</url>
     <content><![CDATA[<h1 id="Nginx-相关介绍-Nginx是什么？能干嘛？"><a href="#Nginx-相关介绍-Nginx是什么？能干嘛？" class="headerlink" title="Nginx 相关介绍(Nginx是什么？能干嘛？)"></a>Nginx 相关介绍(Nginx是什么？能干嘛？)</h1><h2 id="Nginx的产生"><a href="#Nginx的产生" class="headerlink" title="Nginx的产生"></a>Nginx的产生</h2><p>　　没有听过Nginx？那么一定听过它的”同行”Apache吧！Nginx同Apache一样都是一种WEB服务器，基于REST架构风格，以统一资源描述符(Uniform Resources Identifier)URI或者统一资源定位符(Uniform Resources Locator)URL作为沟通依据，通过HTTP协议提供各种网络服务。</p>
